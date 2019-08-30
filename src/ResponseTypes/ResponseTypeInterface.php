@@ -41,4 +41,11 @@ interface ResponseTypeInterface
      * @param string|Key|null $key
      */
     public function setEncryptionKey($key = null);
+
+    /**
+     * Set the nonce
+     *
+     * @param string|null $nonce
+     */
+    public function setNonce($nonce);
 }
