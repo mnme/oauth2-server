@@ -36,6 +36,11 @@ abstract class AbstractResponseType implements ResponseTypeInterface
     protected $privateKey;
 
     /**
+     * @var string|null
+     */
+    protected $nonce;
+
+    /**
      * {@inheritdoc}
      */
     public function setAccessToken(AccessTokenEntityInterface $accessToken)
@@ -49,6 +54,14 @@ abstract class AbstractResponseType implements ResponseTypeInterface
     public function setRefreshToken(RefreshTokenEntityInterface $refreshToken)
     {
         $this->refreshToken = $refreshToken;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setNonce($nonce)
+    {
+        $this->nonce = $nonce;
     }
 
     /**

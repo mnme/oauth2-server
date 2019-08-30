@@ -160,6 +160,9 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
             }
         }
 
+        // Set nonce
+        $responseType->setNonce($authCodePayload->nonce);
+
         // Issue and persist new access token
         $accessToken = $this->issueAccessToken($accessTokenTTL, $client, $authCodePayload->user_id, $scopes);
         $this->getEmitter()->emit(new RequestEvent(RequestEvent::ACCESS_TOKEN_ISSUED, $request));
@@ -278,10 +281,13 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
 
         $stateParameter = $this->getQueryStringParameter('state', $request);
 
+        $nonceParameter = $this->getQueryStringParameter('nonce', $request);
+
         $authorizationRequest = new AuthorizationRequest();
         $authorizationRequest->setGrantTypeId($this->getIdentifier());
         $authorizationRequest->setClient($client);
         $authorizationRequest->setRedirectUri($redirectUri);
+        $authorizationRequest->setNonce($nonceParameter);
 
         if ($stateParameter !== null) {
             $authorizationRequest->setState($stateParameter);
@@ -355,6 +361,7 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
                 'expire_time'           => (new DateTimeImmutable())->add($this->authCodeTTL)->getTimestamp(),
                 'code_challenge'        => $authorizationRequest->getCodeChallenge(),
                 'code_challenge_method' => $authorizationRequest->getCodeChallengeMethod(),
+                'nonce'                 => $authorizationRequest->getNonce(),
             ];
 
             $jsonPayload = \json_encode($payload);
