@@ -65,6 +65,13 @@ class AuthorizationRequest
     protected $state;
 
     /**
+     * The nonce parameter on the authorization request
+     *
+     * @var string|null
+     */
+    protected $nonce;
+
+    /**
      * The code challenge (if provided)
      *
      * @var string
@@ -188,6 +195,22 @@ class AuthorizationRequest
     public function setState($state)
     {
         $this->state = $state;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getNonce()
+    {
+        return $this->nonce;
+    }
+
+    /**
+     * @param string $nonce
+     */
+    public function setNonce($nonce)
+    {
+        $this->nonce = $nonce;
     }
 
     /**
