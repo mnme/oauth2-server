@@ -73,4 +73,9 @@ abstract class AbstractResponseType implements ResponseTypeInterface
     {
         $this->privateKey = $key;
     }
+
+    public function __clone()
+    {
+        $this->setNonce(null);
+    }
 }
