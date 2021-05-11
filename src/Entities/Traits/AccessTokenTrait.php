@@ -27,6 +27,11 @@ trait AccessTokenTrait
     private $privateKey;
 
     /**
+     * @var DateTimeImmutable
+     */
+    private $issuedAtDateTime;
+
+    /**
      * @var Configuration
      */
     private $jwtConfiguration;
@@ -37,6 +42,17 @@ trait AccessTokenTrait
     public function setPrivateKey(CryptKey $privateKey)
     {
         $this->privateKey = $privateKey;
+    }
+
+    /**
+     * Set the date time when the token was issued.
+     * This will be applied to the 'not before' field, too.
+     *
+     * @return DateTime
+     */
+    public function setIssuedAtDateTime(DateTimeImmutable $dateTime)
+    {
+        $this->issuedAtDateTime = $dateTime;
     }
 
     /**
@@ -60,11 +76,13 @@ trait AccessTokenTrait
     {
         $this->initJwtConfiguration();
 
+        $issuedAt = $this->issuedAtDateTime ?? new DateTimeImmutable();
+
         return $this->jwtConfiguration->builder()
             ->permittedFor($this->getClient()->getIdentifier())
             ->identifiedBy($this->getIdentifier())
-            ->issuedAt(new DateTimeImmutable())
-            ->canOnlyBeUsedAfter(new DateTimeImmutable())
+            ->issuedAt($issuedAt)
+            ->canOnlyBeUsedAfter($issuedAt)
             ->expiresAt($this->getExpiryDateTime())
             ->relatedTo((string) $this->getUserIdentifier())
             ->withClaim('scopes', $this->getScopes())
