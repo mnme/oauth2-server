@@ -161,7 +161,9 @@ class AuthCodeGrant extends AbstractAuthorizeGrant
         }
 
         // Set nonce
-        $responseType->setNonce($authCodePayload->nonce);
+        if (\property_exists($authCodePayload, 'nonce')) {
+            $responseType->setNonce($authCodePayload->nonce);
+        }
 
         // Issue and persist new access token
         $accessToken = $this->issueAccessToken($accessTokenTTL, $client, $authCodePayload->user_id, $scopes);
